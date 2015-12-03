@@ -14,7 +14,7 @@ class Form(ModelForm):
         fields = ['company_id','name','website', 'total_Reviews', 'average', 'logo', 'industry']
 
 def home(request):
-	return render(request, 'crunchDoorApp/home.html')
+	return render(request, 'home.html')
 
 def index(request, query, order):
 	company_list = Company.objects.filter(Q(name__icontains=query)).order_by(order)
@@ -43,7 +43,7 @@ def index(request, query, order):
 
 	context = RequestContext(request, {'company_list': company_list, 'query':query, 'order1':order1, 'order2': order2, 'order3':order3, 'order4': order4})
 	output =', '.join([p.name for p in company_list])
-	return render(request, 'crunchDoorApp/index.html', context)
+	return render(request, 'index.html', context)
 
 def detail(request, company_id):
 	#company = get_object_or_404(Company,pk = company_id)
@@ -52,15 +52,15 @@ def detail(request, company_id):
 	hey = 5
 	#Create Similar company's algorithm here
 	company_list = Company.objects.order_by('-name')[:3]
-	return render(request, 'crunchDoorApp/detail.html', {'company': company, 'company_list':company_list, "details":hey})
+	return render(request, 'detail.html', {'company': company, 'company_list':company_list, "details":hey})
 
 def update(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)
 	form = Form(request.POST or None, instance=company)
 	if form.is_valid():
 		form.save()
-		return render(request, 'crunchDoorApp/detail.html', {'company': company})
-	return render(request, 'crunchDoorApp/form.html', {'form':form})
+		return render(request, 'detail.html', {'company': company})
+	return render(request, 'form.html', {'form':form})
 
 def create(request):
 	form = Form(request.POST or None)
@@ -68,8 +68,8 @@ def create(request):
 		form.save()
 		company_list = Company.objects.order_by('-name')[:5]
 		context = RequestContext(request, {'company_list': company_list,})
-		return render(request, 'crunchDoorApp/index.html', context)
-	return render(request, 'crunchDoorApp/form.html', {'form':form})
+		return render(request, 'index.html', context)
+	return render(request, 'form.html', {'form':form})
 
 def delete(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)
@@ -77,8 +77,8 @@ def delete(request, company_id):
 		company.delete()
 		company_list = Company.objects.order_by('-name')[:5]
 		context = RequestContext(request, {'company_list': company_list,})
-		return render(request, 'crunchDoorApp/index.html', context)
-	return render(request, 'crunchDoorApp/confirm_delete.html', {'object':company})
+		return render(request, 'index.html', context)
+	return render(request, 'confirm_delete.html', {'object':company})
 
 def search_companies(request):
 	if request.method =="GET":
@@ -88,7 +88,7 @@ def search_companies(request):
 			company_list = Company.objects.filter(Q(name__icontains=search_text)).order_by('-name')[:5]
 		else:
 			company_list = []
-		return render(request, 'crunchDoorApp/index.html', {'company_list':company_list})
+		return render(request, 'index.html', {'company_list':company_list})
 
 
 
