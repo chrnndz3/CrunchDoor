@@ -49,7 +49,7 @@ def detail(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)
 	companyPermalink = company.name.replace(" ", "-").lower()
 	r = requests.get("https://api.crunchbase.com/v/3/organizations/"+ companyPermalink +"?user_key=daa3c097551d2db8b278f34597499ab9")
-	hey = 5
+	hey = r.json()
 	#Create Similar company's algorithm here
 	company_list = Company.objects.order_by('-name')[:3]
 	return render(request, 'detail.html', {'company': company, 'company_list':company_list, "details":hey})
