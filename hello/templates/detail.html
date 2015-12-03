@@ -1,0 +1,86 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+<link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+
+<div class="row">
+	<div class="col-xs-9">
+		<div class="details">
+			<h1 style="text-align:center;">{{company.name}}</h1>
+			<img style="margin:0 auto; display: block;" class="logo" src="{{company.logo}}">
+			<p class="description">{{details.data.properties.short_description}}</p>
+
+			<table class="table">
+				<tbody>
+					{% if details.data.relationships.offices.items.0.properties.name %}
+					<tr>
+						<td class="title">Locations</td>
+						<td class="information">
+							<div style="display:flex; justify-content:space-between;">
+								{% for address in details.data.relationships.offices.items %}
+								
+								{% if address.properties.street_1 and address.properties.name and address.properties.city%}
+								<div style="margin:0px 10px;">
+									<p><b>{{address.properties.name}}</b></p>
+									<p>{{address.properties.street_1}}</p>
+									<p>{{address.properties.city}}</p>
+								</div> 
+								{% endif %}
+								
+								{% endfor %}
+							</div>
+						</td>
+					</tr>
+					{%endif%}
+					{% if details.data.relationships.products.items.0.properties.name %}
+					<tr>
+						<td class="title">Products</td>
+						<td class="information">
+
+							{% for product in details.data.relationships.products.items %}
+							<b>{{product.properties.name}}, </b>
+							{% endfor %}
+							<div style="    display: inline-block;
+							background: white;
+							margin-left: -8px;
+							margin-bottom: -5px;
+							width: 5px;
+							height: 10px;">  </div>
+						</td>
+					</tr>
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="col-xs-3">
+		<div class="suggested">
+			<h3>Suggested Companies</h3>
+			{% for company in company_list %}
+			<a title="{{company.name}}" class="list-item-link" href="{% url 'company:detail' company.company_id %}">
+				<div class="suggested-list-item">
+					<img class="logo" src="{{company.logo}}">
+				</div>
+			</a>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+
+<!-- <a href="{% url 'company:update' company.company_id %}">Edit</a>
+
+	<a href="{% url 'company:delete' company.company_id %}">Delete</a> -->
+
+	<script src="{% static 'scripts.js' %}"></script>
+<!-- 
+<script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrhJCRV06mysDpW25HhK1Cc49f-O79F-Y&signed_in=false&callback=initMap"
+async defer>
+</script>
+ -->

@@ -1,48 +1,69 @@
-{% extends "base.html" %}
 {% load staticfiles %}
 
-{% block content %}
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+<link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<form class="list-form form-inline">
+  <div class="form-group">
+    <input type="text" class="form-control" id="searchText" value="{{query}}">
+  </div>
+  <select id="orderBy" class="form-control">
+  <option {{order1}} value="name">Sort: Name A-Z</option>
+  <option {{order2}} value="-name">Sort: Name Z-A</option>
+  <option {{order3}} value="-average">Sort: Rating +</option>
+  <option {{order4}} value="average">Sort: Rating -</option>
+</select>
+  <button id="update-filter" type="submit" class="btn btn-default">Search</button>
+</form>
+<div class="list">
+	
+{% if company_list %}
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="{% static 'lang-logo.png'%}">
-    </a>
-    <h1>Getting Started with Python on Heroku</h1>
-    <p>This is a sample Python application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to get the most out of the Heroku platform.</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-python"><span class="glyphicon glyphicon-flash"></span> Getting Started with Python</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/python-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <div class="alert alert-info text-center" role="alert">
-    To deploy your own copy, and learn the fundamentals of the Heroku platform, head over to the <a href="https://devcenter.heroku.com/articles/getting-started-with-python" class="alert-link">Getting Started with Python on Heroku</a> tutorial.
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/python-getting-started">Heroku Button</a> on the repository.</li>
+    {% for company in company_list %}
+    <a class="list-item-link" href="{% url 'company:detail' company.company_id %}">
+        <div class="list-item">
+          <img class="logo" src="{{company.logo}}">
+          <h3>{{ company.name }}</h3>
+          <span class="stars">{{company.average}} 
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+        </span><div style="width:50px; margin-left:calc(68px * {{company.average}} /5 - 65.6px);" class="star-hider"></div>
+        </div>
+        </a>
+    {% endfor %}
+    <!-- <a href="{% url "company:create" %}">New Company</a> -->
+{% else %}
+    <p>No Companies in the database</p>
+{% endif %}
 
-        <li>When Heroku received the source code, it grabbed all the dependencies in the <a href="https://github.com/heroku/python-getting-started/blob/master/requirements.txt">requirements.txt file</a>.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-        <li>Check out the <a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started</a> guide to learn more!</li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Python on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/django-app-configuration">Configuring Django Apps for Heroku</a></li>
-      </ul>
-    </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
 </div>
-{% endblock %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if company_list.has_previous %}
+            <a href="?page={{ company_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ company_list.number }} of {{ company_list.paginator.num_pages }}.
+        </span>
+
+        {% if company_list.has_next %}
+            <a href="?page={{ company_list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+<script src="{% static 'scripts.js' %}"></script>
+<!-- 
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrhJCRV06mysDpW25HhK1Cc49f-O79F-Y&signed_in=false&callback=initMap"
+        async defer>
+</script>
+ -->
