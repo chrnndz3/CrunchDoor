@@ -6,7 +6,7 @@ $('#search').click(function(event){
   orderBy = "name";
 	if(searchText === undefined || searchText ==='')
 		searchText = 'all';
-	document.location.href = '/companies/'+searchText + '/'+ orderBy;
+	document.location.href = '/app/companies/'+searchText + '/'+ orderBy;
 });
 
 $('#update-filter').click(function(event){
@@ -18,9 +18,9 @@ $('#update-filter').click(function(event){
     return;
   }
 	if(searchText === undefined || searchText === "")
-		document.location.href = '/companies/all/'+ orderBy;
+		document.location.href = '/app/companies/all/'+ orderBy;
   else
-	document.location.href = '/companies/'+searchText + '/'+ orderBy;
+	document.location.href = '/app/companies/'+searchText + '/'+ orderBy;
 });
 
 
