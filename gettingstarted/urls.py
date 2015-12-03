@@ -5,5 +5,5 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^crunchDoorApp/', include('hello.urls', namespace="company")),
+    url(r'^crunchDoorApp/', include('crunchDoorApp.urls', namespace="company")),
 ]
