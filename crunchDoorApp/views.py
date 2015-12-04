@@ -5,7 +5,7 @@ from django.http import Http404, JsonResponse
 from django.http import Http404
 from django.template import RequestContext, loader
 from django.forms import ModelForm
-from .models import Company
+from .models import Company, CrunchMemoized, LocationMemoized, ProductMemoized
 from django.db.models import Q, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
