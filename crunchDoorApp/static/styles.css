@@ -66,8 +66,8 @@ z-index: -5;
 tr{
 	border-top:15px solid #FFF;
 }
-.information{
-
+.information1{
+	border-right:1px solid #000;
 }
 .details{
 	width:100%;
@@ -84,6 +84,9 @@ tr{
 	color:#333;
 	position: absolute;
 	display:inline-block;
+	width: 270px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .list-item h3:hover{
 	color:#333;
@@ -121,6 +124,9 @@ tr{
 	transition:box-shadow;
 	box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.37);
 	text-decoration: none; 
+}
+.list-item:hover .edit-delete{
+	display:inline !important;
 }
 .logo{
 	height:100px;

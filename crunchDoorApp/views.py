@@ -48,6 +48,7 @@ def index(request, query, order):
 	return render(request, 'index.html', context)
 
 def detail(request, company_id):
+	#Join Tables
 	company = get_object_or_404(Company,pk = company_id)
 	currCompany = get_object_or_404(Crunch, crunch_id = company.company_id)
 	companyPermalink = currCompany.permalink
@@ -240,6 +241,7 @@ def detail(request, company_id):
 	company_list.append(company2)
 	company_list.append(company3)
 
+
 	return render(request, 'detail.html', {'company': company, 'currCompany':currCompany, 'company_list':company_list, "details":content, "memoized": memoizedCompany})
 
 def update(request, company_id):
@@ -247,15 +249,63 @@ def update(request, company_id):
 	form = Form(request.POST or None, instance=company)
 	if form.is_valid():
 		form.save()
-		return render(request, 'detail.html', {'company': company})
+		order = "name"
+		company_list = Company.objects.order_by(order)
+		query = ''
+		paginator = Paginator(company_list,10)
+		page = request.GET.get('page')
+		try:
+			company_list = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			company_list = paginator.page(1)
+		except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+			company_list = paginator.page(paginator.num_pages)
+		order1= order2 = order3 = order4 = ''
+		if order == 'name':
+			order1 = 'selected'
+		if order == '-name':
+			order2 = 'selected'
+		if order == '-average':
+			order3 = 'selected'
+		if order == 'average':
+			order4 = 'selected'
+
+		context = RequestContext(request, {'company_list': company_list, 'query':query, 'order1':order1, 'order2': order2, 'order3':order3, 'order4': order4})
+		output =', '.join([p.name for p in company_list])
+		return render(request, 'index.html', context)
 	return render(request, 'form.html', {'form':form})
 
 def create(request):
 	form = Form(request.POST or None)
 	if form.is_valid():
 		form.save()
-		company_list = Company.objects.order_by('-name')[:5]
-		context = RequestContext(request, {'company_list': company_list,})
+		order = "name"
+		company_list = Company.objects.order_by(order)
+		query = ''
+		paginator = Paginator(company_list,10)
+		page = request.GET.get('page')
+		try:
+			company_list = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			company_list = paginator.page(1)
+		except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+			company_list = paginator.page(paginator.num_pages)
+		order1= order2 = order3 = order4 = ''
+		if order == 'name':
+			order1 = 'selected'
+		if order == '-name':
+			order2 = 'selected'
+		if order == '-average':
+			order3 = 'selected'
+		if order == 'average':
+			order4 = 'selected'
+
+		context = RequestContext(request, {'company_list': company_list, 'query':query, 'order1':order1, 'order2': order2, 'order3':order3, 'order4': order4})
+		output =', '.join([p.name for p in company_list])
 		return render(request, 'index.html', context)
 	return render(request, 'form.html', {'form':form})
 
@@ -263,8 +313,31 @@ def delete(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)
 	if request.method=='POST':
 		company.delete()
-		company_list = Company.objects.order_by('-name')[:5]
-		context = RequestContext(request, {'company_list': company_list,})
+		order = "name"
+		company_list = Company.objects.order_by(order)
+		query = ''
+		paginator = Paginator(company_list,10)
+		page = request.GET.get('page')
+		try:
+			company_list = paginator.page(page)
+		except PageNotAnInteger:
+			# If page is not an integer, deliver first page.
+			company_list = paginator.page(1)
+		except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+			company_list = paginator.page(paginator.num_pages)
+		order1= order2 = order3 = order4 = ''
+		if order == 'name':
+			order1 = 'selected'
+		if order == '-name':
+			order2 = 'selected'
+		if order == '-average':
+			order3 = 'selected'
+		if order == 'average':
+			order4 = 'selected'
+
+		context = RequestContext(request, {'company_list': company_list, 'query':query, 'order1':order1, 'order2': order2, 'order3':order3, 'order4': order4})
+		output =', '.join([p.name for p in company_list])
 		return render(request, 'index.html', context)
 	return render(request, 'confirm_delete.html', {'object':company})
 

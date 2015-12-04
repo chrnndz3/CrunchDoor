@@ -13,7 +13,7 @@ class Company(models.Model):
 
 class CrunchMemoized(models.Model):
 	permalink = models.CharField(max_length = 150, unique=True)
-	short_description = models.CharField(max_length= 400)
+	short_description = models.CharField(max_length= 400, null=True)
 
 class LocationMemoized(models.Model):
 	permalink = models.CharField(max_length = 150)

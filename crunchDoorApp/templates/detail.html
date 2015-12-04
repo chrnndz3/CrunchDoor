@@ -22,29 +22,39 @@
             <span class="star">&#9733;</span>
         </span><div style="width:50px; margin-left:calc(68px * {{company.average}} /5 - 65.6px);" class="star-hider"></div>
     </div>
+    		{% if details.data.properties.short_description %}
 			<p class="description">{{details.data.properties.short_description}}</p>
+			{%endif%}
 			<table class="table">
 				<tbody>
-					<tr>
-						<td class="title">Average Reviews</td>
-						<td class="information">{{ company.average }}</td>
-					</tr>
+					{% if currCompany.funding %}
 					<tr>
 						<td class="title">Total Funding</td>
 						<td class="information">${{ currCompany.funding }}.00</td>
 					</tr>
+					{% endif%}
+					{% if currCompany.founded %}
 					<tr>
 						<td class="title">Date Founded</td>
 						<td class="information">{{ currCompany.founded }}</td>
 					</tr>
+					{% endif%}
+					{% if currCompany.symbol %}
 					<tr>
 						<td class="title">Stock Symbol</td>
 						<td class="information">{{ currCompany.symbol }}</td>
 					</tr>
+					{% endif%}
+					{% if currCompany.employees %}
 					<tr>
 						<td class="title">Max Employees</td>
 						<td class="information">{{ currCompany.employees }}</td>
 					</tr>
+					{% endif%}
+				</tbody>
+			</table>
+			<table>
+				<tbody>
 					<tr>
 							{% if details.data.relationships.offices.items.0.properties.name %}
 						<td class="title">Locations</td>
@@ -99,10 +109,6 @@
 		</div>
 	</div>
 </div>
-
-<!-- <a href="{% url 'company:update' company.company_id %}">Edit</a>
-
-	<a href="{% url 'company:delete' company.company_id %}">Delete</a> -->
 
 	<script src="{% static 'scripts.js' %}"></script>
 <!-- 

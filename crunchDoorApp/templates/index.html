@@ -19,7 +19,7 @@
   <button id="update-filter" type="submit" class="btn btn-default">Search</button>
 </form>
 <div class="list">
-	
+  
 {% if company_list %}
 
     {% for company in company_list %}
@@ -34,12 +34,19 @@
             <span class="star">&#9733;</span>
             <span class="star">&#9733;</span>
         </span><div style="width:50px; margin-left:calc(68px * {{company.average}} /5 - 65.6px);" class="star-hider"></div>
+
+        <span  style="position:absolute; bottom:0px right:0px;">
+<a class="edit-delete" style="display:none" href="{% url 'company:update' company.company_id %}">Edit</a>
+
+  <a class="edit-delete" style="display:none" href="{% url 'company:delete' company.company_id %}">Delete</a>
+</span>
         </div>
         </a>
     {% endfor %}
-    <!-- <a href="{% url "company:create" %}">New Company</a> -->
+    
 {% else %}
-    <p>No Companies in the database</p>
+    <p>No Companies match that query</p>
+    <a href="{% url "company:create" %}">New Company</a>
 {% endif %}
 
 </div>
