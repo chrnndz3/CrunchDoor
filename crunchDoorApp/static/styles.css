@@ -126,7 +126,7 @@ tr{
 	text-decoration: none; 
 }
 .list-item:hover .edit-delete{
-	display:inline-block; !important;
+	display:inline-block !important;
 }
 .logo{
 	height:100px;
