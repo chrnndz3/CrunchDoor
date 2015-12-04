@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 import requests
+import json
+from django.http import Http404, JsonResponse
 from django.http import Http404
 from django.template import RequestContext, loader
 from django.forms import ModelForm
@@ -48,11 +50,67 @@ def index(request, query, order):
 def detail(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)
 	companyPermalink = company.name.replace(" ", "-").lower()
-	r = requests.get("https://api.crunchbase.com/v/3/organizations/"+ companyPermalink +"?user_key=daa3c097551d2db8b278f34597499ab9")
-	hey = r.json()
+	memoizedCompany = CrunchMemoized.objects.filter(permalink= companyPermalink)
+	if not memoizedCompany:
+		memoizedCompany = "#000"
+		
+		r = requests.get("https://api.crunchbase.com/v/3/organizations/"+ companyPermalink +"?user_key=daa3c097551d2db8b278f34597499ab9")
+		details = r.json()
+		content = json.loads(r.content)
+		crunchMemo = CrunchMemoized(permalink = companyPermalink, short_description = content["data"]["properties"]["short_description"])
+		crunchMemo.save()
+		for location in content["data"]["relationships"]["offices"]["items"]:
+			locationMemo = LocationMemoized(permalink = companyPermalink, name = location["properties"]["name"], street_1 = location["properties"]["street_1"], city = location["properties"]["city"])
+			locationMemo.save()
+		for product in content["data"]["relationships"]["products"]["items"]:
+			productMemo = ProductMemoized(permalink = companyPermalink, name = product["properties"]["name"])
+			productMemo.save()
+
+	else:
+		memoizedCompany = "#27ae60"
+		locationMemo = LocationMemoized.objects.filter(permalink = companyPermalink)
+		productMemo = ProductMemoized.objects.filter(permalink = companyPermalink)
+		crunchMemo = CrunchMemoized.objects.filter(permalink = companyPermalink)[:1].get()
+
+		content = {}
+		data = {}
+		properties = {}
+		relationships = {}
+		offices = {}
+		products = {}
+		content["data"] = data
+		data["properties"] = properties
+		data["relationships"] = relationships
+		relationships["offices"] = offices
+		relationships["products"] = products
+
+
+		content['data']['properties']['short_description'] = crunchMemo.short_description
+		locationItems = []
+		for location in locationMemo:
+			prop = {}
+			properties = {}
+			prop["properties"] = properties
+			properties['name'] = location.name
+			properties['street_1'] = location.street_1
+			properties['city'] = location.city
+			locationItems.append(prop)
+		content['data']['relationships']['offices']['items'] = locationItems
+
+		productItems = []
+		for product in productMemo:
+			prop = {}
+			properties = {}
+			prop["properties"] = properties
+			properties['name'] = product.name
+			productItems.append(prop)
+		content['data']['relationships']['products']['items'] = productItems
+
+
+	
 	#Create Similar company's algorithm here
 	company_list = Company.objects.order_by('-name')[:3]
-	return render(request, 'detail.html', {'company': company, 'company_list':company_list, "details":hey})
+	return render(request, 'detail.html', {'company': company, 'company_list':company_list, "details":content, "memoized": memoizedCompany})
 
 def update(request, company_id):
 	company = get_object_or_404(Company,pk = company_id)

@@ -5,7 +5,10 @@
 body{
 	width: 100%;
 }
-
+.row{
+	margin-left: 0px !important;
+	margin-right:0px !important;
+}
 #map{
 	position:fixed !important;
 	right:0px;

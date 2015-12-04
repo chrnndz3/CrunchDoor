@@ -11,10 +11,18 @@
 <div class="row">
 	<div class="col-xs-9">
 		<div class="details">
-			<h1 style="text-align:center;">{{company.name}}</h1>
+			<h1 style="text-align:center; color:{{memoized}};">{{company.name}}</h1>
 			<img style="margin:0 auto; display: block;" class="logo" src="{{company.logo}}">
+			<div style="width:100%;text-align:center; padding-left:35px">
+			<span class="stars">{{company.average}} 
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+            <span class="star">&#9733;</span>
+        </span><div style="width:50px; margin-left:calc(68px * {{company.average}} /5 - 65.6px);" class="star-hider"></div>
+    </div>
 			<p class="description">{{details.data.properties.short_description}}</p>
-
 			<table class="table">
 				<tbody>
 					{% if details.data.relationships.offices.items.0.properties.name %}
@@ -71,7 +79,6 @@
 		</div>
 	</div>
 </div>
-
 
 <!-- <a href="{% url 'company:update' company.company_id %}">Edit</a>
 

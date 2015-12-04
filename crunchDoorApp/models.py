@@ -10,3 +10,17 @@ class Company(models.Model):
     average = models.DecimalField(max_digits = 3, decimal_places = 2 , default =0)
     logo = models.CharField(max_length = 200, default='0')
     industry = models.CharField(max_length = 50, default='0')
+
+class CrunchMemoized(models.Model):
+	permalink = models.CharField(max_length = 150, unique=True)
+	short_description = models.CharField(max_length= 400)
+
+class LocationMemoized(models.Model):
+	permalink = models.CharField(max_length = 150)
+	name = models.CharField(max_length = 50, null=True)
+	street_1 = models.CharField(max_length = 50, null=True)
+	city = models.CharField(max_length = 50, null=True)
+
+class ProductMemoized(models.Model):
+	permalink = models.CharField(max_length = 150)
+	name = models.CharField(max_length = 50)
