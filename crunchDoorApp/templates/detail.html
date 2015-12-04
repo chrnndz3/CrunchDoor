@@ -25,8 +25,28 @@
 			<p class="description">{{details.data.properties.short_description}}</p>
 			<table class="table">
 				<tbody>
-					{% if details.data.relationships.offices.items.0.properties.name %}
 					<tr>
+						<td class="title">Average Reviews</td>
+						<td class="information">{{ company.average }}</td>
+					</tr>
+					<tr>
+						<td class="title">Total Funding</td>
+						<td class="information">${{ currCompany.funding }}.00</td>
+					</tr>
+					<tr>
+						<td class="title">Date Founded</td>
+						<td class="information">{{ currCompany.founded }}</td>
+					</tr>
+					<tr>
+						<td class="title">Stock Symbol</td>
+						<td class="information">{{ currCompany.symbol }}</td>
+					</tr>
+					<tr>
+						<td class="title">Max Employees</td>
+						<td class="information">{{ currCompany.employees }}</td>
+					</tr>
+					<tr>
+							{% if details.data.relationships.offices.items.0.properties.name %}
 						<td class="title">Locations</td>
 						<td class="information">
 							<div style="display:flex; justify-content:space-between;">
